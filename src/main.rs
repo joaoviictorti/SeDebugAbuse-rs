@@ -67,7 +67,7 @@ fn main() {
                 let r_buf = VirtualAllocEx(
                     proc,
                     Some(null_mut()),
-                    std::mem::size_of::<i32>(),
+                    buf.len(),
                     MEM_RESERVE | MEM_COMMIT,
                     PAGE_EXECUTE_READWRITE,
                 );
