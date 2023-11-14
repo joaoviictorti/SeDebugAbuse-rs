@@ -27,10 +27,10 @@ cargo build --release --target x86_64-pc-windows-gnu
 
 # Usage
 
-These are the two ways the code:
+You can run with cargo run or the compiled binary directly:
 ```sh
 cargo run -- <pid>
 ```
 ```sh
-SeDebugAbuse_rs.exe <pid> 
+target/release/SeDebugAbuse_rs.exe <pid> 
 ```
