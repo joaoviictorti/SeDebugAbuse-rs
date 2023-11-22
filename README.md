@@ -5,10 +5,13 @@
 	<a href="#"><img src="https://img.shields.io/badge/platform-windows-blueviolet"></a>
 </p>
 
-This repository features code written in Rust intended to exploit the SeDebugPrivilege privilege. With this privilege enabled, it is possible to perform a process injection attack on a target process that has administrator permissions.
-
+- [Overview](#overview)
 - [Compile](#compile)
 - [Usage](#usage)
+
+# Overview
+
+This repository features code written in Rust intended to exploit the SeDebugPrivilege privilege. With this privilege enabled, it is possible to perform a process injection attack on a target process that has administrator permissions.
 
 # Compile
 
